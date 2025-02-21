@@ -1,5 +1,8 @@
 export default function  Home() {
   return (
-    <div> welcome to Home page</div>
+    <>
+    <h1>Kummitha Venkata Koti Reddy</h1>
+    
+    </>
   )
 }
