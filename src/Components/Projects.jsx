@@ -1,9 +1,21 @@
 import { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+  CardActionArea,
+  Collapse,
+  CardActions,
+  Button,
+} from "@mui/material";
 
 const projects = [
   {
     title: "Community Communication Website for a Residency",
     technologies: "C, Angular, ASP.Net",
+    image: "/community.png",
+    github: "https://github.com/19kummitha/capstone",
     description: [
       "Weather Forecast API is used to display the current weather situation.",
       "The Community Communication in a residency is most important for the residents and admins.",
@@ -13,6 +25,7 @@ const projects = [
   {
     title: "Loan Approval Prediction Using Machine Learning",
     technologies: "Python, Machine Learning",
+    image: "/loan.png",
     description: [
       "Used various machine learning algorithms like Gaussian Naive Bayes, Random Forest, Decision Tree, KNN, and Logistic Regression.",
       "Gaussian Naive Bayes achieved superior accuracy.",
@@ -20,33 +33,31 @@ const projects = [
   },
   {
     title: "E-Commerce Website",
-    technologies: "HTML, CSS, JavaScript",
+    technologies: "HTML, CSS, JavaScript, TypeScript, C#",
+    image: "/ecommerce.png",
+    github: "https://github.com/19kummitha/Re-Store",
     description: [
       "An application that shows products according to the user’s input.",
       "This project includes only the frontend of an E-commerce website.",
     ],
   },
-  {
-    title: "Ultrasound Detection Using Arduino-Uno",
-    technologies: "Arduino",
-    description: [
-      "This project is designed to detect theft in places like museums and banks.",
-      "Helps protect valuable assets from theft and damages.",
-    ],
-  },
 ];
 
 export default function Projects() {
-  // Keep track of which project is expanded
-  const [expandedProject, setExpandedProject] = useState(null);
+  const [expandedProjects, setExpandedProjects] = useState({}); // Track multiple expanded projects
 
   const handleProjectClick = (index) => {
-    setExpandedProject((prevIndex) => (prevIndex === index ? null : index)); // Toggle
+    setExpandedProjects((prev) => ({
+      ...prev,
+      [index]: !prev[index], // Toggle only the clicked project
+    }));
   };
 
   return (
     <div style={{ padding: "20px", textAlign: "center" }}>
-      <h1 style={{ marginBottom: "20px" }}>Projects</h1>
+      <Typography variant="h4" gutterBottom>
+        Projects
+      </Typography>
       <div
         style={{
           display: "flex",
@@ -56,34 +67,58 @@ export default function Projects() {
         }}
       >
         {projects.map((project, index) => (
-          <div
+          <Card
             key={index}
-            onClick={() => handleProjectClick(index)}
-            style={{
-              width: "300px",
-              border: "1px solid #ccc",
-              borderRadius: "8px",
-              padding: "15px",
-              boxShadow: "2px 2px 10px rgba(0,0,0,0.1)",
-              textAlign: "left",
-              backgroundColor:
-                expandedProject === index ? "#eef6ff" : "#f9f9f9",
-              cursor: "pointer",
+            sx={{
+              width: 320,
+              boxShadow: 3,
+              borderRadius: 2,
               transition: "0.3s",
+              backgroundColor: expandedProjects[index] ? "#eef6ff" : "white",
             }}
           >
-            <h3>{project.title}</h3>
-            <p>
-              <strong>Technologies:</strong> {project.technologies}
-            </p>
-            {expandedProject === index && (
-              <ul style={{ marginTop: "10px" }}>
+            <CardActionArea onClick={() => handleProjectClick(index)}>
+              <CardMedia
+                component="img"
+                height="180"
+                image={project.image}
+                alt={project.title}
+              />
+              <CardContent>
+                <Typography variant="h6">{project.title}</Typography>
+                <Typography variant="body2" color="textSecondary">
+                  <strong>Technologies:</strong> {project.technologies}
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+
+            <Collapse in={expandedProjects[index]} timeout="auto" unmountOnExit>
+              <CardContent>
                 {project.description.map((point, idx) => (
-                  <li key={idx}>{point}</li>
+                  <Typography
+                    variant="body2"
+                    key={idx}
+                    style={{ marginBottom: "5px" }}
+                  >
+                    • {point}
+                  </Typography>
                 ))}
-              </ul>
+              </CardContent>
+            </Collapse>
+
+            {project.github && (
+              <CardActions>
+                <Button
+                  size="small"
+                  color="primary"
+                  href={project.github}
+                  target="_blank"
+                >
+                  GitHub
+                </Button>
+              </CardActions>
             )}
-          </div>
+          </Card>
         ))}
       </div>
     </div>
